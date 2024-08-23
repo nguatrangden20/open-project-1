@@ -14,7 +14,7 @@ public class DepthNormalsFeature : ScriptableRendererFeature
     class DepthNormalsPass : ScriptableRenderPass
     {
         int kDepthBufferBits = 32;
-        private RenderTargetHandle depthAttachmentHandle { get; set; }
+        private RTHandle depthAttachmentHandle { get; set; }
         internal RenderTextureDescriptor descriptor { get; private set; }
 
         private Material depthNormalsMaterial = null;
@@ -28,7 +28,7 @@ public class DepthNormalsFeature : ScriptableRendererFeature
             depthNormalsMaterial = material;
         }
 
-        public void Setup(RenderTextureDescriptor baseDescriptor, RenderTargetHandle depthAttachmentHandle)
+        public void Setup(RenderTextureDescriptor baseDescriptor, RTHandle depthAttachmentHandle)
         {
             this.depthAttachmentHandle = depthAttachmentHandle;
             baseDescriptor.colorFormat = RenderTextureFormat.ARGB32;
@@ -43,9 +43,9 @@ public class DepthNormalsFeature : ScriptableRendererFeature
         // The render pipeline will ensure target setup and clearing happens in an performance manner.
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
-            cmd.GetTemporaryRT(depthAttachmentHandle.id, descriptor, FilterMode.Point);
+            /*cmd.GetTemporaryRT(depthAttachmentHandle.id, descriptor, FilterMode.Point);
             ConfigureTarget(depthAttachmentHandle.Identifier());
-            ConfigureClear(ClearFlag.All, Color.black);
+            ConfigureClear(ClearFlag.All, Color.black);*/
         }
 
         // Here you can implement the rendering logic.
@@ -54,7 +54,7 @@ public class DepthNormalsFeature : ScriptableRendererFeature
         // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            CommandBuffer cmd = CommandBufferPool.Get(m_ProfilerTag);
+            /*CommandBuffer cmd = CommandBufferPool.Get(m_ProfilerTag);
 			
             using (new ProfilingScope(cmd, new ProfilingSampler(m_ProfilerTag)))
             {
@@ -72,34 +72,34 @@ public class DepthNormalsFeature : ScriptableRendererFeature
                 context.DrawRenderers(renderingData.cullResults, ref drawSettings,
                     ref m_FilteringSettings);
 
-                cmd.SetGlobalTexture("_CameraDepthNormalsTexture", depthAttachmentHandle.id);
+              //  cmd.SetGlobalTexture("_CameraDepthNormalsTexture", depthAttachmentHandle.id);
             }
 
             context.ExecuteCommandBuffer(cmd);
-            CommandBufferPool.Release(cmd);
+            CommandBufferPool.Release(cmd);*/
         }
 
         /// Cleanup any allocated resources that were created during the execution of this render pass.
         public override void FrameCleanup(CommandBuffer cmd)
         {
-            if (depthAttachmentHandle != RenderTargetHandle.CameraTarget)
+            /*if (depthAttachmentHandle != RTHandle.CameraTarget)
             {
                 cmd.ReleaseTemporaryRT(depthAttachmentHandle.id);
-                depthAttachmentHandle = RenderTargetHandle.CameraTarget;
-            }
+                depthAttachmentHandle = RTHandle.CameraTarget;
+            }*/
         }
     }
 
     DepthNormalsPass depthNormalsPass;
-    RenderTargetHandle depthNormalsTexture;
+    RTHandle depthNormalsTexture;
     Material depthNormalsMaterial;
 
     public override void Create()
     {
-        depthNormalsMaterial = CoreUtils.CreateEngineMaterial("Hidden/Internal-DepthNormalsTexture");
+        /*depthNormalsMaterial = CoreUtils.CreateEngineMaterial("Hidden/Internal-DepthNormalsTexture");
         depthNormalsPass = new DepthNormalsPass(RenderQueueRange.opaque, -1, depthNormalsMaterial);
         depthNormalsPass.renderPassEvent = RenderPassEvent.AfterRenderingPrePasses;
-        depthNormalsTexture.Init("_CameraDepthNormalsTexture");
+        depthNormalsTexture.Init("_CameraDepthNormalsTexture");*/
     }
 
     // Here you can inject one or multiple render passes in the renderer.
